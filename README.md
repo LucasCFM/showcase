@@ -1,8 +1,13 @@
 # Test Gorilla Home Assignment
 
+This is the **Home Assignment** test project, a step in the **Test Gorilla** hiring process. The main technologies used in this project are:
+
+- Python
+- Django
+- MongoDB
+
 ## Table of Contents
 
-1. [Description](#description)
 2. [How to run](#how-to-run)
 3. [Data and Logic](#data-and-logic)
 4. [DB Visualization](#db-visualization)
@@ -11,21 +16,17 @@
 6. [Appreciation](#appreciation)
 
 
-## Description
-
-This is a project for Home Assignment test, a step on Test Gorilla hiring process. The project is a simple Django application that uses a NoSQL database (MongoDB) to store its models.
-
-
 ## How to run
-This projects was developed using Python with Django framework, and Docker, also its compose tool for aggregating contatiners. To run it you must have docker and docker-compose both installed in your machine. The steps to install Docker and its compose tool are wrote down below:
+This project was implemented with the help of Docker and Docker Compose. To run it you must have docker and docker-compose both installed in your machine. The steps to install them can be found below:
+
 1. First you need to [install docker](https://docs.docker.com/get-docker/):
 
-2. Check if Docker is installed, by simply open a terminal and running:
+2. Check if Docker is installed by simply typing the following command on the terminal:
 ```shell
 docker --version
 ```
 
-3. Then install the compose:
+3. Then install docker-compose:
 - Using Curl
 ```shell
 curl -L https://github.com/docker/compose/releases/download/1.8.0-rc2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
@@ -42,19 +43,23 @@ pip install docker-compose
 docker-compose --version
 ```
 
-After having Docker and Docker Compose installed you are good to run the project.
-It has 3 environment:
-- Development: Which runs both the database and the project, and also Mongo Express wich is a GUI (Graphical User Interface) to visualize and manage the mongo collections and databases;
-- Deployment: This basically is the development environment without the Mongo Express;
-- Testing: This one will only runs the tests and provides a HMTL page for checking its results and coverage. Instead of a real Mongo DB it has a Mock library of that, called `mongomock`.
+_Note: newer versions of Docker might already include docker-compose._
 
-To start a environment you will need to run some Docker Compose commands. As it has 3 environments, 3 differents docker-compose files were create to architect and run the services following the above environment specifications. They are located in the root folder, named by `docker-compose` and its variations:  
-`docker-compose.yml, docker-compose-dev.yml, docker-compose-test.yml`
+After making sure Docker and Docker Compose are installed you can run the project that is composed of 3 environments:
 
-To run an environment, first identify the corresponding file for that environment, and do:
+- Development:Run both the database and the project, and also Mongo Express wich is a GUI (Graphical User Interface) to visualize and manage the mongo collections and databases;
+- Deployment: Same as the Development environment but without running Mongo Express;
+- Testing: Run unit|integration tests and generate a test coverage report in HMTL. `mongomock` was used to mock the interaction between the application and MongoDB.
+
+To start the application, please run the following commands keeping in mind the different build environments. Each `docker-compose` file can be found in the root folder and must replace the key `DOCKER_FILE` below. Docker Compose files:
+
+- `docker-compose.yml`
+- `docker-compose-dev.yml` 
+- `docker-compose-test.yml`
+
 ```shell
 # Build the service images
-docker-compose -f DOCKER_FILE build
+docker-compose -f {DOCKER_FILE} build
 ```
 
 ```shell
@@ -62,7 +67,7 @@ docker-compose -f DOCKER_FILE build
 docker-compose -f DOCKER_FILE up -d 
 ```
 
-After run the above commands and stop receiving its output you gonna have the services running. You can checkout the sevices lit by running:
+After running the above commands, the application should be up. You can check the current status by typing:
 ```shell
 docker-compose -f DOCKER_FILE ps
 ```
@@ -76,14 +81,14 @@ home-test_mongo-express_1         tini -- /docker-entrypoint ...   Up      0.0.0
 home-test_test-gorilla-django_1   sh ./start.sh                    Up      0.0.0.0:8080->8080/tcp,:::8080->8080/tcp
 ```
 
-As you can see you gonna have some services running, depending on each docker file you choosed. The last column has the ports that you can access to reach each service. To use any service just point to localhost - or 0.0.0.0 - and the respective service port, e.g. http://localhost:8080 .
+The last column has the ports that you can access to reach each service. To use any service just point to localhost - or 0.0.0.0 - and the respective service port, e.g. http://localhost:8080 .
 
 
 ## Data and Logic
-For this assignment it was asked to create and list a Test example model for the Test Gorilla platform.
+For this assignment it was asked to create and list a Test example model for the **Test Gorilla** platform.
 The test model has the following structure:
 
-```json
+```js
 "Test": { // Document
     "name": "string",
     "summary": "string",
@@ -110,7 +115,7 @@ The test model has the following structure:
 }
 ```
 
-With this models it is possible to manage all the custom questions types that Test Gorilla has:
+With these models, it's possible to manage all the custom question types that **Test Gorilla** has:
 - Multiple-choice type:  
 In this case we gonna have questions with a list of a possible **answers**, and the **correctAnswers** attribute will only have a single **answer** id, representing the Id of the correct answer option.
 - Multiple-response type:  
@@ -124,45 +129,45 @@ The user answer (**userAnswer**) is validated according to the **correctAnswers*
 
 
 ## DB Visualization
-In the development environment we can visualize the data we have in the database in a user friendly way. To achieve it, after running the development environment, by starting the services using the `docker-compose-dev.yml` file, simply open your prefered browser and type `localhost:8081` - or you can just [click here](http://localhost:8081).
+In the development environment, we can visualize the data in a user-friendly way. After running the development environment, simply open your preferred browser and type `localhost:8081` - or you can just [click here](http://localhost:8081).
 
-And you will have a page like this:
+You will open a page similar to the following:
 ![Mongo Express Home Page](./doc/mongo-express-home.png)
 
-Acessing our database (test-data), by clickin on the blue link typed `test-data` or in the green button next to it, you can visualize the collections within that DB like this:
+Access the database (test-data) by clicking on the blue link named `test-data` or in the green button next to it, you can visualize the collections within that DB as follows:
 ![Mongo Express DB Page](./doc/mongo-express-db-view.png)
 
-To view a specific collection click on its name or in the green button in the beginning of the collection line. You will see something like this:
+To view a specific collection, click on its name or the green button. You should see something like this page:
 ![Mongo Express Collection Page](./doc/mongo-express-collection-view.png)
 
-It is not only restricted to visualization, you can definetelly CRUD (create, read, update and delete) the interely database and its collections.
+It's not restricted only to visualization, feel free to also CRUD (create, read, update and delete) any collection, if needed.
 
 
 ## Tests
-As mentioned priorly, this projects has a test environment that runs the unit tests (actually it only has one, just for demonstration) and outputs its results and coverage on a HTML page. To have it you only need to `up` the test service/environment by running the docker compose with the `docker-compose-test.yml` file.
+As previously mentioned, this project has a test environment that runs the unit tests (actually it only has one, just for demonstration) and outputs its results and coverage in a HTML page. To have it you only need to `up` the test service/environment by running the docker compose with the `docker-compose-test.yml` file.
 
-After running it some files will appear in the `coverage` folder located in the root folder of this project, just open the `index.html` file inside it.
+After executing the command, a few files should appear in the `coverage` folder located in the root level of this project, go ahead and open the `index.html` file to see the test coverage report that should look like the following.
 
-You will have something like this:
 ![Test coverage](./doc/test-coverage.png)
 
 
 ## Improvements
-This is a simple project for showing some of my code skills, and I wish I would have coded more features and showed a little bit more of what I can do. Below are some features and aspects that I would like to have done in this project:
+This is a simple project to show you my technical skills, and I wish I had more time to implement more features to re-enforce how important this project and the possibility of joining the company is to my carreer. Below you can find a few features that I had in mind:
+
 - Improve comments:  
 Not all methods are commented 😕
 - Create env file having all env variables, instead of puting it raw in docker-compose file:  
-Makes docker-compose files more clean and separete all the environment variables in a specific folder
+Make docker-compose files cleaner and separate all the environment variables in a specific folder
 - Custom Exception classes:  
-Makes it better to validade and check errors and exceptions
+Make it better to validate and check errors and exceptions
 - Logging for code and DB commands:  
-To improve excution follow up and analyze fluxes
-- Cache controll:  
-Python mongoengine library has a cache enabled by default, a good feature is controlling it by cache-headers in the request
+To improve excution follow up and analyze flows
+- Cache control:  
+Python mongoengine library has a cache enabled by default, a nice-to-have feature is the ability to control it via `cache-headers` in the request
 - Get CSRF Token from cookie:  
 Instead of avoiding CSRF Token check get it from the response cookie
 - Separeted user answer:  
-To improve collection reusability, so it is not necessary to duplicate Question collection - and maybe the Test.
+To improve collection reusability duplicate duplicate Question collection - and maybe the Test.
 
 
 ## Docker and Docker compose useful commands
@@ -195,7 +200,5 @@ add log for mongo commands
     https://docs.mongoengine.org/guide/logging-monitoring.html
 
 
-
-
-## Appreciation
-I would like to thank Otto and Nicolás for the opportunity and the time they gave to me for this whole process 😃
+## Final Thoughts
+I would like to thank Otto and Nicolás for the opportunity and the time they gave me during the entire process. I truly hope I was able to deliver a project you were expecting and I look forward to working with you if approved.
